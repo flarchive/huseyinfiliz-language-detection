@@ -1,0 +1,25 @@
+name: Language Detection JS
+
+on: [workflow_dispatch, push, pull_request]
+
+jobs:
+  run:
+    uses: flarum/framework/.github/workflows/REUSABLE_frontend.yml@2.x
+    with:
+      enable_bundlewatch: false
+      enable_prettier: true
+      enable_typescript: true
+
+      frontend_directory: ./js
+      backend_directory: .
+      js_package_manager: yarn
+      cache_dependency_path: ./js/yarn.lock
+
+      # Keep the build on Node 24 LTS, including dependency updates that require Node 22 or newer.
+      node_version: 24
+
+      # Not cosmetic: `flarum/action-build` only commits the built `js/dist` bundle on a
+      # push to this branch, so a mismatch here means the shipped bundle is never rebuilt.
+      main_git_branch: 2.x
+    secrets:
+      bundlewatch_github_token: ${{ secrets.BUNDLEWATCH_GITHUB_TOKEN }}
